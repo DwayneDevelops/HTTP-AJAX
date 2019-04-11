@@ -4,6 +4,8 @@ import './App.css';
 import FriendsList from './components/FriendsList/FriendsList';
 import FriendForm from './components/FriendForm';
 import { Route, Link } from 'react-router-dom';
+import Friend from './components/FriendsList/Friend';
+
 
 class App extends Component {
   constructor(){
@@ -25,9 +27,10 @@ class App extends Component {
     
   }
 
-  addFriend = () => {
+  addFriend = (e) => {
+    e.preventDefault();
     axios
-      .post('http://localhost:5000/friends', { newFriend: {name: '', age: '', email: ''}})
+      .post('http://localhost:5000/friends', {name: '', age: '', email: ''})
       .then(res => { console.log(res);
       })
       .catch(err => {console.log(err);
@@ -46,9 +49,13 @@ class App extends Component {
         </div>
       </nav>
         <Route
-          path="/friend-list/"
+          path="/friend-list"
           render={ props => <FriendsList {...props} 
           friends={this.state.friends} />}
+        />
+        <Route
+          path="/friend-list/:id"
+          component={Friend}
         />
         <Route
           path="/new-friend"

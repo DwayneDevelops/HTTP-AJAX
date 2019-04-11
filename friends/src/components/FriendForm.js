@@ -13,14 +13,14 @@ export default class FriendForm extends React.Component {
     }
 
     handleChange = e => {
-        this.setState({[e.target.name]: e.target.value})
+        this.setState({[this.state.value]: e.target.value})
     }
 
     render() {
         return(
             <div className="new-friend-wrapper">
                 <h2>Be My New Friend</h2>
-                <form>
+                <form onSubmit={this.props.addFriend}>
                     <input 
                         name='name'
                         type='text'
@@ -42,7 +42,7 @@ export default class FriendForm extends React.Component {
                         placeholder='email'
                         onChange={this.handleChange}
                     />
-                    <button type='submit' onClick={this.props.addFriend()}>Add New Friend</button>
+                    <button type='submit'>Add New Friend</button>
                 </form>
             </div>
         );
