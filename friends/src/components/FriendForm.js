@@ -15,6 +15,10 @@ export default class FriendForm extends React.Component {
     handleChange = e => {
         this.setState({[this.state.value]: e.target.value})
     }
+    
+    handleSubmit = e => {
+        e.preventDefault();
+    }
 
     render() {
         return(
