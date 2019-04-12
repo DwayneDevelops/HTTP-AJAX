@@ -6,5 +6,6 @@ export default function FriendsList(props) {
         <div>
             {props.friends.map(friend => <Friend friend={friend} key={friend.id} />)}
         </div>
+        
     );
 }

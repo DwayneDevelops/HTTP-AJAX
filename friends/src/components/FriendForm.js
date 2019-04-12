@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export default class FriendForm extends React.Component {
     constructor(props){
@@ -12,6 +13,16 @@ export default class FriendForm extends React.Component {
         }
     }
 
+    componentDidMount() {
+        if (this.props.friends) {
+            this.setState({
+                name: this.props.friends.name,
+                age: this.props.friends.age,
+                email: this.props.friends.email
+            });
+        }
+    }
+
     handleChange = e => {
         this.setState({[this.state.value]: e.target.value})
     }
@@ -20,11 +31,36 @@ export default class FriendForm extends React.Component {
         e.preventDefault();
     }
 
+    handleSubmit = e => {
+        e.preventDefault();
+        
+        if (!this.props.friends) {
+            this.props.addFriend({
+                ...this.state
+            })
+        }
+
+        else {
+            this.props.updateFriend({
+                ...this.state,
+                id: this.props.friends.id
+            });
+        }
+
+        this.setState({
+            name: '',
+            age: '',
+            email: ''
+        });
+
+        this.props.history.push("/friend-list")
+    };
+
     render() {
         return(
             <div className="new-friend-wrapper">
                 <h2>Be My New Friend</h2>
-                <form onSubmit={this.props.addFriend}>
+                <form onSubmit={this.handleSubmit}>
                     <input 
                         name='name'
                         type='text'
@@ -52,4 +88,8 @@ export default class FriendForm extends React.Component {
         );
     }
     
+}
+
+FriendForm.propTypes = {
+    addFriend: PropTypes.func,
 }

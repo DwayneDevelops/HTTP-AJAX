@@ -3,15 +3,16 @@ import axios from 'axios';
 import './App.css';
 import FriendsList from './components/FriendsList/FriendsList';
 import FriendForm from './components/FriendForm';
-import { Route, Link } from 'react-router-dom';
+import { Route, NavLink } from 'react-router-dom';
 import Friend from './components/FriendsList/Friend';
-
+import Home from './components/Home/Home'; 
 
 class App extends Component {
   constructor(){
     super();
     this.state = {
-      friends: []
+      friends: [],
+      currentFriend: null
     }
   }
 
@@ -27,15 +28,37 @@ class App extends Component {
     
   }
 
-  addFriend = (e) => {
-    e.preventDefault();
+  addFriend = friend => {
     axios
-      .post('http://localhost:5000/friends', {name: '', age: '', email: ''})
+      .post('http://localhost:5000/friends', friend)
       .then(res => { console.log(res);
       })
       .catch(err => {console.log(err);
       });
   };
+
+  deleteFriend = id => {
+    axios
+      .delete(`http://localhost:5000/friends/${id}`)
+      .then( res => {
+        this.setState({ friends: res.data });
+        this.props.history.push('/friend-list');
+      })
+      .catch( err => console.log(err));
+  }
+
+  updateFriend = item => {
+    axios
+      .put(`http://localhost:5000/friends/${this.friend.id}`, item )
+      .then(res => {
+        this.setState({ friends: res.data, currentFriend: null })
+      })
+  }
+
+  setupUpdate = item => {
+    this.setState({ friends: item });
+    this.props.history.push('/friend-list');
+  }
 
   render() {
     return (
@@ -43,24 +66,34 @@ class App extends Component {
       <nav>
         <h1>Welcome Friends</h1>
         <div className='nav-links'>
-          <Link exact to="/">Home</Link>
-          <Link exact to="/friend-list">My friends</Link>
-          <Link to="/new-friend">Add a friend</Link>
+          <NavLink to="/">Home</NavLink>
+          <NavLink to="/friend-list">My friends</NavLink>
+          <NavLink to="/new-friend">Add a friend</NavLink>
         </div>
       </nav>
         <Route
-          path="/friend-list"
+          exact path="/"
+          component={Home}
+        />
+        <Route
+          exact path="/friend-list"
           render={ props => <FriendsList {...props} 
           friends={this.state.friends} />}
         />
         <Route
           path="/friend-list/:id"
-          component={Friend}
+          render={props => <Friend {...props}
+          setupUpdate={this.setupUpdate}
+          deleteFriend={this.deleteFriend} />}
         />
         <Route
-          path="/new-friend"
-          render={ props => <FriendForm {...props} addFriend={this.addFriend} />}
+          exact path="/new-friend"
+          render={ props => <FriendForm {...props} 
+          friends={this.state.friends} />}
+          addFriend={this.addFriend}
+          updateFriend={this.updateFriend}
         />
+        
       </div>
     );
   }
