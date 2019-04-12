@@ -1,18 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 
-
-export default function Friend ({ friend }) {
-    let { name, age, email } = friend;
-    return( 
-        <Link to="/friend-list">
-            <div className='friend-wrapper' >
-                <h3>{name}</h3>
-                <p>{age}</p>
-                <p>{email}</p>
-            </div>
-        </Link>
+export default function Friend (props) {
+    return(
+        <div>
+            <h3>{props.friend.name}</h3>
+            <p>{props.friend.age}</p>
+            <p>{props.friend.email}</p>
+        </div>
     );
 }
 
